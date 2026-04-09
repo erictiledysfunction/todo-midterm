@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace WinFormsApp2
@@ -64,6 +65,11 @@ namespace WinFormsApp2
             LISTVIEW.FullRowSelect = true;
             LISTVIEW.CheckBoxes = true;
 
+
+            listPinned.View = View.Details;
+            listPinned.Columns.Add("Pinned Tasks", listPinned.Width - 10);
+            listPinned.FullRowSelect = true;
+            listPinned.CheckBoxes = true;
             UpdateTaskCounts();
 
         }
@@ -89,6 +95,13 @@ namespace WinFormsApp2
                 else
                     pending++;
             }
+            foreach (ListViewItem item in listPinned.Items)
+            {
+                if (item.Checked)
+                    completed++;
+                else
+                    pending++;
+            }
 
             lblPending.Text = $"Pending: {pending}";
             lblCompleted.Text = $"Completed: {completed}";
@@ -102,6 +115,62 @@ namespace WinFormsApp2
         private void lblPending_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void LISTVIEW_DoubleClick(object sender, EventArgs e)
+        {
+            if (LISTVIEW.SelectedItems.Count > 0)
+            {
+                ListViewItem item = LISTVIEW.SelectedItems[0];
+
+                listPinned.Items.Add((ListViewItem)item.Clone());
+                LISTVIEW.Items.Remove(item);
+
+                UpdateTaskCounts();
+            }
+        }
+
+        private void listPinned_DoubleClick(object sender, EventArgs e)
+        {
+            if (listPinned.SelectedItems.Count > 0)
+            {
+                ListViewItem item = listPinned.SelectedItems[0];
+
+                LISTVIEW.Items.Add((ListViewItem)item.Clone());
+                listPinned.Items.Remove(item);
+
+                UpdateTaskCounts();
+            }
+        }
+
+        private void listPinned_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void listPinned_ItemChecked(object sender, ItemCheckedEventArgs e)
+        {
+            UpdateTaskCounts();
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnAdd_MouseEnter(object sender, EventArgs e)
+        {
+            btnAdd.BackColor = Color.DarkCyan;
+        }
+
+        private void btnAdd_MouseLeave(object sender, EventArgs e)
+        {
+            btnAdd.BackColor = Color.Teal;
         }
     }
 }
